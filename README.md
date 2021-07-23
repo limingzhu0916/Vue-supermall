@@ -1,4 +1,4 @@
-# supermall-vuecli3
+# vue-supermall
 
 ## Project setup
 ```

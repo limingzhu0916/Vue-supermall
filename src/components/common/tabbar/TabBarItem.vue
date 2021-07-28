@@ -12,6 +12,7 @@ export default {
     isActivate() {
       return this.$route.path === this.path
     },
+    // 父组件中传入iconColor可以修改默认字体颜色
     getColor() {
       return this.isActivate ? {color: this.iconColor} : {}
     }
@@ -20,7 +21,7 @@ export default {
     path: String,
     iconColor: {
       type: String,
-      default: "#1C1C1C"
+      default: "#ff5777"
     }
   },
   methods: {

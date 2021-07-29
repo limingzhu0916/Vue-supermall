@@ -4,7 +4,7 @@
       <div slot="center">购物街</div>
     </nav-bar>
     <swiper>
-      <swiper-item v-for="item in banner">
+      <swiper-item v-for="item in banner" :key="item.acm">
         <a :href="item.link">
           <img :src="item.image" alt="" />
         </a>

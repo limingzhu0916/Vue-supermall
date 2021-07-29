@@ -56,12 +56,13 @@ export default {
     };
   },
   mounted() {
+    // 该定时器的事件从300改为500后，可以解决刷新后，小圆标不出现，轮播图不播放的情况
     setTimeout(() => {
       // 1.操作DOM, 在前后添加Slide
       this.handleDom();
       // 2、开启定时器
       this.startTimer();
-    }, 100);
+    }, 500);
   },
   methods: {
     /* 
@@ -114,6 +115,7 @@ export default {
         this.$emit("transitionEnd", this.currentIndex - 1);
       }, this.animDuration);
     },
+
     /* 
       操作DOM，在前后各添加一个slide，方便跳转
     */
@@ -178,14 +180,12 @@ export default {
         return;
         // 根据移动位置，移动图片，保证用户只拖动一点，即可滑动到下一张
       } else if (
-        this.distance > 0 &&
-        currentMove > this.totalWidth * this.moveRatio
+        this.distance > 0 && currentMove > this.totalWidth * this.moveRatio
       ) {
         // 向右移动超过图片尺寸的0.25
         this.currentIndex--;
       } else if (
-        this.distance < 0 &&
-        currentMove > this.totalWidth * this.moveRatio
+        this.distance < 0 && currentMove > this.totalWidth * this.moveRatio
       ) {
         // 向左移动超过图片尺寸的0.25
         this.currentIndex++;

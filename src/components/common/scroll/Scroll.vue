@@ -9,6 +9,13 @@
 <script>
 import BScroll from 'better-scroll'
 export default {
+  props: {
+    // 是否实时监控滑动位置不固定
+    probeType: {
+      type: Number,
+      default: 0
+    }
+  },
   data() {
     return {
       scroll: null
@@ -21,8 +28,13 @@ export default {
   },
   mounted() {
     this.scroll = new BScroll(this.$refs.wrapper, {
-      probeType: 3,
+      click: true,
+      probeType: this.probeType,
       observeDOM: true
+    }),
+    this.scroll.on('scroll', (position) => {
+      // console.log(position)
+      this.$emit('scroll', position)
     })
   },
 }

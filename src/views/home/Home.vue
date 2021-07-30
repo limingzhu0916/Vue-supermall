@@ -3,7 +3,7 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="content" ref="scroll">
+    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
       <home-swiper :banner="banner"></home-swiper>
       <home-recommend :recommend="recommend" />
       <feature-view />
@@ -14,7 +14,7 @@
       />
       <goods-list :goodList="goods[currentType].list" />
     </scroll>
-    <back-top @click.native="backTopClick"></back-top>
+    <back-top @click.native="backTopClick" v-show="isShowBackTop"></back-top>
   </div>
 </template>
 
@@ -51,6 +51,7 @@ export default {
         sell: { page: 0, list: [] },
       },
       currentType: "pop",
+      isShowBackTop: false
     };
   },
   created() {
@@ -80,7 +81,12 @@ export default {
     // 点击回到顶部
     backTopClick() {
       // 访问scroll组件中的scrollTo方法
-      this.$refs.scroll.scrollTo(0, 0)
+      this.$refs.scroll.scrollTo(0, 0);
+    },
+    // scroll组件传回position触发的事件
+    contentScroll(position) {
+      // 通过position的位置控制back-top图标的显示
+      this.isShowBackTop = (-position.y) > 1000
     },
     /* 
       请求数据的方法

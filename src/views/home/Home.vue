@@ -3,7 +3,13 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <scroll class="content" ref="scroll" :probe-type="3" @scroll="contentScroll">
+    <scroll
+      class="content"
+      ref="scroll"
+      :probe-type="3"
+      @scroll="contentScroll"
+      :pull-up-load="true"
+      @pullingUp="loadMore">
       <home-swiper :banner="banner"></home-swiper>
       <home-recommend :recommend="recommend" />
       <feature-view />
@@ -51,7 +57,7 @@ export default {
         sell: { page: 0, list: [] },
       },
       currentType: "pop",
-      isShowBackTop: false
+      isShowBackTop: false,
     };
   },
   created() {
@@ -86,7 +92,11 @@ export default {
     // scroll组件传回position触发的事件
     contentScroll(position) {
       // 通过position的位置控制back-top图标的显示
-      this.isShowBackTop = (-position.y) > 1000
+      this.isShowBackTop = -position.y > 1000;
+    },
+    // 上拉加载更多
+    loadMore() {
+      this.getGoodsData(this.currentType)
     },
     /* 
       请求数据的方法

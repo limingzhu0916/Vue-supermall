@@ -10,10 +10,15 @@
 import BScroll from 'better-scroll'
 export default {
   props: {
-    // 是否实时监控滑动位置不固定
+    // 是否实时监控滑动位置
     probeType: {
       type: Number,
       default: 0
+    },
+    // 是否加载更多
+    pullUpLoad: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -29,12 +34,16 @@ export default {
   mounted() {
     this.scroll = new BScroll(this.$refs.wrapper, {
       click: true,
+      observeDOM: true,
       probeType: this.probeType,
-      observeDOM: true
+      pullUpLoad: this.pullUpLoad
     }),
     this.scroll.on('scroll', (position) => {
       // console.log(position)
       this.$emit('scroll', position)
+    }),
+    this.scroll.on('pullingUp', () => {
+      this.$emit('pullingUp')
     })
   },
 }

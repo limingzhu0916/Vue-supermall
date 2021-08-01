@@ -3,20 +3,31 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
+    <tab-control
+        :title="['流行', '新款', '精选']"
+        class="tab-control"
+        @tabClick="tabClick"
+        ref="tabControl1"
+        v-show="isShowTabControl"
+      />
     <scroll
       class="content"
       ref="scroll"
       :probe-type="3"
       @scroll="contentScroll"
       :pull-up-load="true"
-      @pullingUp="loadMore">
-      <home-swiper :banner="banner"></home-swiper>
+      @pullingUp="loadMore"
+    >
+      <home-swiper
+        :banner="banner"
+        @swiperImageLoad="swiperImageLoad"
+      ></home-swiper>
       <home-recommend :recommend="recommend" />
       <feature-view />
       <tab-control
         :title="['流行', '新款', '精选']"
-        class="tab-control"
         @tabClick="tabClick"
+        ref="tabControl2"
       />
       <goods-list :goodList="goods[currentType].list" />
     </scroll>
@@ -36,6 +47,7 @@ import Scroll from "components/common/scroll/Scroll.vue";
 import BackTop from "components/content/backTop/BackTop.vue";
 
 import { getHomeMultidata, getGoodsData } from "network/home.js";
+import { debounce } from "common/util.js";
 export default {
   components: {
     NavBar,
@@ -58,6 +70,8 @@ export default {
       },
       currentType: "pop",
       isShowBackTop: false,
+      tabControlOffsetTop: null,
+      isShowTabControl: false,
     };
   },
   created() {
@@ -65,6 +79,14 @@ export default {
     this.getGoodsData("pop");
     this.getGoodsData("new");
     this.getGoodsData("sell");
+  },
+  mounted() {
+    // 监听事件总线上的imageLoad事件
+    const refresh = debounce(this.$refs.scroll.refresh, 30);
+    this.$bus.$on("imageLoad", () => {
+      // 调用scroll组件中的refresh方法,使用防抖函数避免refresh执行多次
+      refresh();
+    });
   },
   methods: {
     /* 
@@ -83,6 +105,8 @@ export default {
           this.currentType = "sell";
           break;
       }
+      this.$refs.tabControl1.currentIndex = index
+      this.$refs.tabControl2.currentIndex = index
     },
     // 点击回到顶部
     backTopClick() {
@@ -93,10 +117,17 @@ export default {
     contentScroll(position) {
       // 通过position的位置控制back-top图标的显示
       this.isShowBackTop = -position.y > 1000;
+      // 通过position的位置控制tab-control吸顶效果
+      this.isShowTabControl = (-position.y) > this.tabControlOffsetTop
     },
     // 上拉加载更多
     loadMore() {
-      this.getGoodsData(this.currentType)
+      this.getGoodsData(this.currentType);
+    },
+    // swiper中图片加载后
+    swiperImageLoad() {
+      // 获取tab-control的offset
+      this.tabControlOffsetTop = this.$refs.tabControl2.$el.offsetTop
     },
     /* 
       请求数据的方法
@@ -120,7 +151,7 @@ export default {
 
 <style scoped>
 #home {
-  padding-top: 44px;
+  /* padding-top: 44px; */
   /* 首页高度是视口高度，防止被内容撑开 */
   height: 100vh;
   position: relative;
@@ -128,15 +159,16 @@ export default {
 .home-nav {
   background-color: var(--color-tint);
   color: #fff;
-  position: fixed;
+  /* position: fixed;
   left: 0;
   right: 0;
   top: 0;
-  z-index: 9;
+  z-index: 9; */
 }
 .tab-control {
-  position: sticky;
-  top: 44px;
+  position: relative;
+  /* position: sticky; */
+  /* top: 44px; */
   z-index: 9;
 }
 .content {

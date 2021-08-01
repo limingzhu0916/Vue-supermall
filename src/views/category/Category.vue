@@ -132,7 +132,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .wrapper{
   height: 190px;
   /* 原生滚动方法，在移动端十分卡顿 */

@@ -72,6 +72,7 @@ export default {
       isShowBackTop: false,
       tabControlOffsetTop: null,
       isShowTabControl: false,
+      saveY: 0,
     };
   },
   created() {
@@ -79,6 +80,16 @@ export default {
     this.getGoodsData("pop");
     this.getGoodsData("new");
     this.getGoodsData("sell");
+  },
+  activated() {
+    // 在切换回该页面时，将保存下来的位置还原
+    this.$refs.scroll.scrollTo(0, this.saveY, 10)
+    // 重新刷新better-scroll
+    this.$refs.scroll.refresh()
+  },
+  deactivated() {
+    // 在切换到其他页面时，纪录当前页面滚动到的位置
+    this.saveY = this.$refs.scroll.getScrollY()
   },
   mounted() {
     // 监听事件总线上的imageLoad事件

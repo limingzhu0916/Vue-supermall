@@ -20,8 +20,7 @@
     >
       <home-swiper
         :banner="banner"
-        @swiperImageLoad="swiperImageLoad"
-      ></home-swiper>
+        @swiperImageLoad="swiperImageLoad" />
       <home-recommend :recommend="recommend" />
       <feature-view />
       <tab-control
@@ -31,7 +30,7 @@
       />
       <goods-list :goodList="goods[currentType].list" />
     </scroll>
-    <back-top @click.native="backTopClick" v-show="isShowBackTop"></back-top>
+    <back-top @click.native="backTopClick" v-show="isShowBackTop" />
   </div>
 </template>
 

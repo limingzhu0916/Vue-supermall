@@ -1,16 +1,18 @@
 <template>
-  <div>
-    <detail-nav-bar />
-    <detail-swiper :topImages="topImages" />
-    <detail-base-info :goods="goods" />
-    <detail-shop-info :shop="shop" />
-    <ul>
-      <li>1</li>
-      <li>2</li>
-      <li>3</li>
-      <li>4</li>
-      <li>5</li>
-    </ul>
+  <div id="detail">
+    <detail-nav-bar class="detail-nav-bar" />
+    <scroll class="content" ref="scroll">
+      <detail-swiper :topImages="topImages"/>
+      <detail-base-info :goods="goods" />
+      <detail-shop-info :shop="shop" />
+      <detail-goods-info :detailInfo="detailInfo" @imgLoad="imagesLoad" />
+      <detail-params :goodsParam="goodsParam" />
+      <ul>
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+      </ul>
+    </scroll>
   </div>
 </template>
 
@@ -19,8 +21,12 @@ import DetailNavBar from "./childComps/DetailNavBar.vue";
 import DetailSwiper from "./childComps/DetailSwiper.vue";
 import DetailBaseInfo from "./childComps/DetailBaseInfo.vue";
 import DetailShopInfo from "./childComps/DetailShopInfo.vue";
+import DetailGoodsInfo from "./childComps/DetailGoodsInfo.vue";
+import DetailParams from "./childComps/DetailParams.vue";
 
-import { getDetailData, Goods, Shop } from "network/detail.js";
+import Scroll from "components/common/scroll/Scroll.vue";
+
+import { getDetailData, Goods, Shop, GoodsParam } from "network/detail.js";
 export default {
   name: "Detail",
   components: {
@@ -28,13 +34,18 @@ export default {
     DetailSwiper,
     DetailBaseInfo,
     DetailShopInfo,
+    Scroll,
+    DetailGoodsInfo,
+    DetailParams,
   },
   data() {
     return {
       iid: null,
       topImages: null,
       goods: {},
-      shop: {}
+      shop: {},
+      detailInfo: {},
+      goodsParam: {}
     };
   },
   created() {
@@ -52,11 +63,35 @@ export default {
         result.shopInfo.services
       );
       // 获取店铺信息
-      this.shop = new Shop(result.shopInfo)
+      this.shop = new Shop(result.shopInfo);
+      // 保存详情页数据
+      this.detailInfo = result.detailInfo;
+      // 获取参数信息
+      this.goodsParam = new GoodsParam(result.itemParams.info, result.itemParams.rule)
     });
+  },
+  methods: {
+    imagesLoad() {
+      // 重新刷新better-scroll
+      this.$refs.scroll.refresh();
+    }
   },
 };
 </script>
 
-<style>
+<style scoped>
+#detail {
+  height: 100vh;
+  background-color: #fff;
+  position: relative;
+  z-index: 9;
+}
+.detail-nav-bar {
+  background-color: #fff;
+  position: relative;
+  z-index: 9;
+}
+.content {
+  height: calc(100% - 44px);
+}
 </style>

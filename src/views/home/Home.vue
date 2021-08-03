@@ -43,10 +43,9 @@ import NavBar from "components/common/navbar/NavBar";
 import TabControl from "components/content/tabControl/TabControl.vue";
 import GoodsList from "components/content/goods/GoodsList.vue";
 import Scroll from "components/common/scroll/Scroll.vue";
-import BackTop from "components/content/backTop/BackTop.vue";
 
 import { getHomeMultidata, getGoodsData } from "network/home.js";
-import { itemListenerMixin } from 'common/mixin.js'
+import { itemListenerMixin, backTopMixin } from 'common/mixin.js'
 export default {
   components: {
     NavBar,
@@ -56,9 +55,8 @@ export default {
     TabControl,
     GoodsList,
     Scroll,
-    BackTop,
   },
-  mixins: [itemListenerMixin],
+  mixins: [itemListenerMixin, backTopMixin],
   data() {
     return {
       banner: [],
@@ -69,7 +67,6 @@ export default {
         sell: { page: 0, list: [] },
       },
       currentType: "pop",
-      isShowBackTop: false,
       tabControlOffsetTop: null,
       isShowTabControl: false,
       saveY: 0,
@@ -115,15 +112,10 @@ export default {
       this.$refs.tabControl1.currentIndex = index
       this.$refs.tabControl2.currentIndex = index
     },
-    // 点击回到顶部
-    backTopClick() {
-      // 访问scroll组件中的scrollTo方法
-      this.$refs.scroll.scrollTo(0, 0);
-    },
     // scroll组件传回position触发的事件
     contentScroll(position) {
       // 通过position的位置控制back-top图标的显示
-      this.isShowBackTop = -position.y > 1000;
+      this.changeShowBackTop(position)
       // 通过position的位置控制tab-control吸顶效果
       this.isShowTabControl = (-position.y) > this.tabControlOffsetTop
     },

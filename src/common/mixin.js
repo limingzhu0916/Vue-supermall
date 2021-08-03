@@ -1,4 +1,5 @@
 import { debounce } from "common/util.js";
+import BackTop from "components/content/backTop/BackTop.vue";
 
 export const itemListenerMixin = {
   data() {
@@ -14,5 +15,27 @@ export const itemListenerMixin = {
       refresh();
     }
     this.$bus.$on("imageLoad", this.imageLoadFunc);
+  },
+}
+
+export const backTopMixin = {
+  components: {
+    BackTop
+  },
+  data() {
+    return {
+      isShowBackTop: false,
+    }
+  },
+  methods: {
+    // 点击回到顶部
+    backTopClick() {
+      // 访问scroll组件中的scrollTo方法
+      this.$refs.scroll.scrollTo(0, 0);
+    },
+    changeShowBackTop(position) {
+      // 通过position的位置控制back-top图标的显示
+      this.isShowBackTop = -position.y > 1000;
+    }
   },
 }

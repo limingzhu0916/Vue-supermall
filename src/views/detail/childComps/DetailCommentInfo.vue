@@ -1,7 +1,7 @@
 <template>
-  <div id="detail-comment" v-if="Object.keys(commentInfo).length !== 0">
+  <div id="detail-comment">
     <div class="comment-title">
-      <span class="comment-name">用户评价</span>
+      <span class="comment-name">用户评价({{Object.keys(commentInfo).length}})</span>
       <img
         class="comment-icon"
         src="~assets/img/detail/right_arrow.svg"
@@ -9,29 +9,31 @@
       />
       <span class="comment-more">更多</span>
     </div>
-    <div class="comment-info">
-      <div class="user-info">
-        <img :src="commentInfo.user.avatar" alt="" />
-        <span>{{ commentInfo.user.uname }}</span>
+    <div v-if="Object.keys(commentInfo).length !== 0">
+      <div class="comment-info">
+        <div class="user-info">
+          <img :src="commentInfo.user.avatar" alt="" />
+          <span>{{ commentInfo.user.uname }}</span>
+        </div>
+        <div class="comment-content">
+          <div class="content">{{ commentInfo.content }}</div>
+          <p class="content-info">
+            {{ commentInfo.created | dateShow }}
+            {{ commentInfo.style }}
+          </p>
+        </div>
       </div>
-      <div class="comment-content">
-        <div class="content">{{ commentInfo.content }}</div>
-        <p class="content-info">
-          {{ commentInfo.created | dateShow }}
-          {{ commentInfo.style }}
-        </p>
+      <div class="comment-img" v-if="commentInfo.images != null">
+        <img
+          :src="item"
+          alt=""
+          v-for="(item, index) in commentInfo.images"
+          :key="index"
+        />
       </div>
-    </div>
-    <div class="comment-img" v-if="commentInfo.images != null">
-      <img
-        :src="item"
-        alt=""
-        v-for="(item, index) in commentInfo.images"
-        :key="index"
-      />
-    </div>
-    <div class="shop_reply" v-if="commentInfo.explain != null">
-      {{ commentInfo.explain }}
+      <div class="shop_reply" v-if="commentInfo.explain != null">
+        {{ commentInfo.explain }}
+      </div>
     </div>
   </div>
 </template>

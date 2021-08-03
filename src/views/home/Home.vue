@@ -46,7 +46,7 @@ import Scroll from "components/common/scroll/Scroll.vue";
 import BackTop from "components/content/backTop/BackTop.vue";
 
 import { getHomeMultidata, getGoodsData } from "network/home.js";
-import { debounce } from "common/util.js";
+import { itemListenerMixin } from 'common/mixin.js'
 export default {
   components: {
     NavBar,
@@ -58,6 +58,7 @@ export default {
     Scroll,
     BackTop,
   },
+  mixins: [itemListenerMixin],
   data() {
     return {
       banner: [],
@@ -89,14 +90,10 @@ export default {
   deactivated() {
     // 在切换到其他页面时，纪录当前页面滚动到的位置
     this.saveY = this.$refs.scroll.getScrollY()
+    // 取消全局监听事件
+    this.$bus.$off("imageLoad", this.imageLoadFunc)
   },
   mounted() {
-    // 监听事件总线上的imageLoad事件
-    const refresh = debounce(this.$refs.scroll.refresh, 30);
-    this.$bus.$on("imageLoad", () => {
-      // 调用scroll组件中的refresh方法,使用防抖函数避免refresh执行多次
-      refresh();
-    });
   },
   methods: {
     /* 

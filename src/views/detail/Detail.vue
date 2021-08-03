@@ -8,11 +8,7 @@
       <detail-goods-info :detailInfo="detailInfo" @imgLoad="imagesLoad" />
       <detail-params :goodsParam="goodsParam" />
       <detail-comment-info :commentInfo="commentInfo" />
-      <ul>
-        <li>1</li>
-        <li>2</li>
-        <li>3</li>
-      </ul>
+      <goods-list :goodList="recommendInfo"/>
     </scroll>
   </div>
 </template>
@@ -27,8 +23,11 @@ import DetailParams from "./childComps/DetailParams.vue";
 import DetailCommentInfo from './childComps/DetailCommentInfo.vue';
 
 import Scroll from "components/common/scroll/Scroll.vue";
+import GoodsList from "components/content/goods/GoodsList.vue";
 
-import { getDetailData, Goods, Shop, GoodsParam } from "network/detail.js";
+import { getDetailData, Goods, Shop, GoodsParam, getRecommendData } from "network/detail.js";
+import { itemListenerMixin } from 'common/mixin.js'
+
 export default {
   name: "Detail",
   components: {
@@ -40,7 +39,9 @@ export default {
     DetailGoodsInfo,
     DetailParams,
     DetailCommentInfo,
+    GoodsList,
   },
+  mixins: [itemListenerMixin],
   data() {
     return {
       iid: null,
@@ -49,7 +50,8 @@ export default {
       shop: {},
       detailInfo: {},
       goodsParam: {},
-      commentInfo: {}
+      commentInfo: {},
+      recommendInfo: [],
     };
   },
   created() {
@@ -58,7 +60,6 @@ export default {
     // 根据iid请求数据
     getDetailData(this.iid).then((res) => {
       const result = res.result;
-      console.log(result);
       this.topImages = result.itemInfo.topImages;
       // 获取商品信息
       this.goods = new Goods(
@@ -77,6 +78,16 @@ export default {
         this.commentInfo = result.rate.list[0]
       }
     });
+    getRecommendData().then(res => {
+      this.recommendInfo = res.data.list
+    })
+  },
+  mounted() {
+
+  },
+  destroyed() {
+    // 切换其他页面时，取消对全局事件的监听
+    this.$bus.$off('imageLoad', this.imageLoadFunc)
   },
   methods: {
     imagesLoad() {

@@ -22,9 +22,6 @@
         </p>
       </div>
     </div>
-    <div class="shop_reply" v-if="commentInfo.explain != null">
-      {{ commentInfo.explain }}
-    </div>
     <div class="comment-img" v-if="commentInfo.images != null">
       <img
         :src="item"
@@ -32,6 +29,9 @@
         v-for="(item, index) in commentInfo.images"
         :key="index"
       />
+    </div>
+    <div class="shop_reply" v-if="commentInfo.explain != null">
+      {{ commentInfo.explain }}
     </div>
   </div>
 </template>
@@ -99,10 +99,13 @@ export default {
   padding: 8px 0;
 }
 .shop_reply {
-  border-top: 0.04rem solid rgba(128, 128, 128, 0.4);
-  padding: 0.5rem 0;
+  border-top: 1px solid rgba(128, 128, 128, 0.4);
+  padding: 5px 0;
   color: gray;
-  line-height: 0.8rem;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .comment-img img {
   margin-right: 5px;

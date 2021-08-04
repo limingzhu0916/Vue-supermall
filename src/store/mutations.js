@@ -6,6 +6,8 @@ export default {
     payload.count++
   },
   [ADDTOCART](state, payload) {
+    // 点击将商品加入购物车时，为其添加一个选中的属性
+    payload.checked = true
     state.cartList.push(payload)
   }
 }

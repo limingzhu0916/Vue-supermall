@@ -152,7 +152,11 @@ export default {
       product.price = this.goods.realPrice
       product.iid = this.iid
       // 向Vuex中提交事件
-      this.$store.dispatch("addCart", product)
+      this.$store.dispatch("addCart", product).then(res => {
+        // toast组件已经挂载到Vue原型上，可以直接使用内部方法show
+        // this.$toast.show(res, 2000)
+        this.$toast.show(res)
+      })
     }
   },
 };

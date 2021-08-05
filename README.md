@@ -1,7 +1,7 @@
 # 基于 Vue 的购物商城 Web APP
 
 ### 效果截屏
-![效果展示](https://personal-financ.oss-cn-chengdu.aliyuncs.com/qqmusic/Snipaste_2021-06-22_21-45-20.png)
+![效果展示](img_readme/项目概览.png)
 
 ### 项目结构
 ```js
